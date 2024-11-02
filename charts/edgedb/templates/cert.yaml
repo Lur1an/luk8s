@@ -1,0 +1,21 @@
+{{- if .Values.security.tls.enabled }}
+
+{{- if .Values.security.tls.cert }}
+{{- if .Values.security.tls.secret }}
+{{- fail "You cannot provide both cert and secret" }}
+{{- end }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "edgedb.fullname" . }}-cert
+  labels:
+    {{- include "edgedb.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "edgedb.tlsSecretName" . }}
+  secretTemplate:
+    labels:
+      {{- include "edgedb.labels" . | nindent 6 }}
+  {{ toYaml .Values.security.tls.cert | nindent 2 }}
+{{- end }}
+
+{{- end }}

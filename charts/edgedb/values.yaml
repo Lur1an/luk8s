@@ -1,0 +1,60 @@
+image:
+  repository: edgedb/edgedb
+  pullPolicy: IfNotPresent
+  tag:
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+replicas: 1
+
+security:
+  password:
+    # You can provide your own password by referencing a secret, otherwise the chart will create a password
+    # secret:
+    #   name: edgedb-user-defined-secret
+    #   key: user-defined-key
+  tls:
+    enabled: false
+    # Provide the template for a cert-manager certificate
+    # Leave out secretName and secretTemplate if you want the chart to create a certificate
+    # with cert-manager
+    #
+    # cert:
+    #   dnsNames:
+    #   - "lurian.dev"
+    #   issuerRef:
+    #     name: selfsigned-issuer
+    #     kind: ClusterIssuer
+    secret: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+resources: {}
+
+env: []
+volumes: []
+volumeMounts: []
+
+service:
+  type: ClusterIP
+  port: 5656
+
+storage:
+  enabled: true
+  className: ""
+  storage: "10Gi"
+
+postgres:
+  enabled: false
+  # Can also just be a string postgres://mypostgres:5432/edgedb
+  # dsn:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: edgedb-postgres-app
+  #       key: uri

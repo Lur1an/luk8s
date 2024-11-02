@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "edgedb.fullname" . }}
+  labels:
+    {{- include "edgedb.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "edgedb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "edgedb.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{- if .Values.postgres.enabled }}
+      - name: wait-for-postgres
+        image: postgres:15-alpine  # Using postgres image for pg_isready tool
+        env:
+        - name: EDGEDB_POSTGRES_DSN
+          {{- if kindIs "string" .Values.postgres.dsn }}
+          value: {{ .Values.postgres.dsn }}
+          {{- else }}
+          {{ toYaml .Values.postgres.dsn | nindent 10 }}
+          {{- end }}
+        command: ['sh', '-c']
+        args:
+          - |
+            until pg_isready -d "$EDGEDB_POSTGRES_DSN"; do
+              echo "Waiting for postgres..."
+              sleep 2
+            done
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5656
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /server/status/ready
+            port: 5656
+        livenessProbe:
+          httpGet:
+            path: /server/status/alive
+            port: 5656
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        env:
+        {{- if .Values.postgres.enabled }}
+        {{- if not .Values.postgres.dsn }}
+        {{- fail "You must provide a postgres dsn value if postgres is enabled" }}
+        {{- end }}
+        - name: EDGEDB_POSTGRES_DSN
+          {{- if kindIs "string" .Values.postgres.dsn }}
+          value: {{ .Values.postgres.dsn }}
+          {{- else }}
+          {{ toYaml .Values.postgres.dsn | nindent 10 }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.security.tls.enabled }}
+        - name: EDGEDB_SERVER_TLS_CERT_FILE
+          value: /etc/edgedb/tls/tls.crt
+        - name: EDGEDB_SERVER_TLS_KEY_FILE
+          value: /etc/edgedb/tls/tls.key
+        {{- else }}
+        - name: EDGEDB_SERVER_TLS_CERT_MODE
+          value: generate_self_signed
+        {{- end }}
+        - name: EDGEDB_SERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+            {{- if .Values.security.password }}
+              name: {{ .Values.security.password.secret.name }}
+              key: {{ .Values.security.password.secret.key }}
+            {{- else }}
+              name: {{ include "edgedb.fullname" . }}-server-password
+              key: password
+            {{- end}}
+        {{- with .Values.env }}
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
+        - name: EDGEDB_PORT
+          value: "5656"
+        volumeMounts:
+          {{- if .Values.storage.enabled }}
+          {{- if .Values.postgres.enabled }}
+          {{- fail "Choose either postgres or storage" }}
+          {{- end }}
+          {{- if ne (int .Values.replicas) 1 }}
+          {{- fail "You cannot use storage with more than one replica, use postgres instead" }}
+          {{- end }}
+          - name: data
+            mountPath: /var/lib/edgedb/data
+          {{- end }}
+          {{- if .Values.security.tls.enabled }}
+          - name: tls-cert
+            mountPath: /etc/edgedb/tls
+            readOnly: true
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+      {{- if .Values.storage.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "edgedb.fullname" . }}-data
+      {{- end }}
+      {{- if .Values.security.tls.enabled }}
+      - name: tls-cert
+        secret:
+          secretName: {{ include "edgedb.tlsSecretName" . }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

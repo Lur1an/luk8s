@@ -11,4 +11,15 @@ entries:
     urls:
     - https://github.com/Lur1an/luk8s/releases/download/deez1-0.1.0/deez1-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-01T14:57:54.355405114Z"
+  edgedb:
+  - apiVersion: v2
+    appVersion: "5.6"
+    created: "2024-11-02T18:29:45.772949462Z"
+    description: A Helm chart for self hosting EdgeDB
+    digest: 62ee6e53a9ab452aedfc326066a4edc3f35de64c87298694b790d377c669d9bd
+    name: edgedb
+    type: application
+    urls:
+    - https://github.com/Lur1an/luk8s/releases/download/edgedb-0.1.0/edgedb-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-11-02T18:29:45.772958409Z"

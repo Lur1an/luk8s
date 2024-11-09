@@ -3,6 +3,16 @@ entries:
   edgedb:
   - apiVersion: v2
     appVersion: "5.6"
+    created: "2024-11-09T11:41:27.826578228Z"
+    description: A Helm chart for self hosting EdgeDB
+    digest: 9eb28e5b9e78b5ee5e36e230cc84f2c08a024926b33c87f568dfdad9ade44f2e
+    name: edgedb
+    type: application
+    urls:
+    - https://github.com/Lur1an/luk8s/releases/download/edgedb-0.1.1/edgedb-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "5.6"
     created: "2024-11-02T18:29:45.772949462Z"
     description: A Helm chart for self hosting EdgeDB
     digest: 62ee6e53a9ab452aedfc326066a4edc3f35de64c87298694b790d377c669d9bd
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/Lur1an/luk8s/releases/download/edgedb-0.1.0/edgedb-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-02T18:29:45.772958409Z"
+generated: "2024-11-09T11:41:27.826589669Z"

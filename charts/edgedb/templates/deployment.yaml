@@ -97,7 +97,7 @@ spec:
               key: password
             {{- end}}
         {{- with .Values.env }}
-        {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: EDGEDB_PORT
           value: "5656"

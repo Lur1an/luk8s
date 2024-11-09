@@ -1,0 +1,19 @@
+image:
+  repository: edgedb/edgedb
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+replicas: 1
+
+env:
+- name: EDGEDB_SERVER_ADMIN_UI
+  value: enabled
+storage:
+  enabled: true
+  className: ""
+  storage: "10Gi"

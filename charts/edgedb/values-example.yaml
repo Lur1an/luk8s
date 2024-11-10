@@ -15,5 +15,5 @@ env:
   value: enabled
 storage:
   enabled: true
-  className: ""
+  className: "local-path"
   storage: "10Gi"

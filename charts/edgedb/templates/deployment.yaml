@@ -89,13 +89,8 @@ spec:
         - name: EDGEDB_SERVER_PASSWORD
           valueFrom:
             secretKeyRef:
-            {{- if .Values.security.password }}
-              name: {{ .Values.security.password.secret.name }}
-              key: {{ .Values.security.password.secret.key }}
-            {{- else }}
               name: {{ include "edgedb.fullname" . }}-server-password
               key: password
-            {{- end}}
         {{- with .Values.env }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

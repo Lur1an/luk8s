@@ -52,13 +52,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Get the server password value
+Generate or lookup password
 */}}
-{{- define "edgedb.serverPassword" -}}
-{{- if .Values.security.password }}
-{{- .Values.security.password.secret.name }}
+{{- define "edgedb.password" -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-server-password" (include "edgedb.fullname" .)) }}
+{{- if $secret }}
+{{- index $secret.data "password" | b64dec }}
 {{- else }}
-{{- include "edgedb.fullname" . }}-server-password
+{{- randAlphaNum 20 }}
 {{- end }}
 {{- end }}
 

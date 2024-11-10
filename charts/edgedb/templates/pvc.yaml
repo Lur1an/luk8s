@@ -1,4 +1,7 @@
 {{- if .Values.storage.enabled }}
+{{- if not .Values.storage.className }}
+{{- fail "You must provide a storage class name" }}
+{{- end }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

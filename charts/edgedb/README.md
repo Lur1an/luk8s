@@ -46,14 +46,7 @@ This is useful in case a postgres operator is creating the database for you and 
 
 ### Security Configuration
 #### Server Password
-By default, the chart generates a random password. You can provide your own password using a secret:
-```yaml
-security:
-  password:
-    secret:
-      name: my-edgedb-secret
-      key: password
-```
+By default, the chart generates a random password as a secret.
 
 #### TLS Configuration
 

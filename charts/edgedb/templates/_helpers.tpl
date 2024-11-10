@@ -51,6 +51,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
+{{/*
+Get the server password value
+*/}}
+{{- define "edgedb.serverPassword" -}}
+{{- if .Values.security.password }}
+{{- .Values.security.password.secret.name }}
+{{- else }}
+{{- include "edgedb.fullname" . }}-server-password
+{{- end }}
+{{- end }}
+
 {{- define "edgedb.tlsSecretName"}}
 {{- if .Values.security.tls.enabled }}
   {{- if .Values.security.tls.secret }}

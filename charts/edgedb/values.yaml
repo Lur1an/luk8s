@@ -12,11 +12,6 @@ affinity: {}
 replicas: 1
 
 security:
-  password:
-    # You can provide your own password by referencing a secret, otherwise the chart will create a password
-    # secret:
-    #   name: edgedb-user-defined-secret
-    #   key: user-defined-key
   tls:
     enabled: false
     # Provide the template for a cert-manager certificate

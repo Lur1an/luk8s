@@ -17,3 +17,4 @@ storage:
   enabled: true
   className: "local-path"
   storage: "10Gi"
+

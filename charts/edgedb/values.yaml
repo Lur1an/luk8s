@@ -12,6 +12,9 @@ affinity: {}
 replicas: 1
 
 security:
+  # password: 
+  #   secret: ""
+  #   key: ""
   tls:
     enabled: false
     # Provide the template for a cert-manager certificate

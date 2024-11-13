@@ -32,7 +32,7 @@ spec:
       - name: wait-for-postgres
         image: postgres:15-alpine  # Using postgres image for pg_isready tool
         env:
-        - name: EDGEDB_SERVER_POSTGRES_DSN
+        - name: EDGEDB_SERVER_BACKEND_DSN
           {{- if kindIs "string" .Values.postgres.dsn }}
           value: {{ .Values.postgres.dsn }}
           {{- else }}

@@ -1,7 +1,7 @@
 name: rust-build
 
 env:
-  REGISTRY_IMAGE: lurian/sample
+  REGISTRY_IMAGE: ghrc.io/lurian/sample
   IMAGE_TAG: latest
 
 on:

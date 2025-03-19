@@ -32,7 +32,7 @@ spec:
       - name: wait-for-postgres
         image: postgres:16-alpine  # Using postgres image for pg_isready tool
         env:
-        - name: GEL_SERVER_BACKEND_DSN
+        - name: {{ .Values.envPrefix }}_SERVER_BACKEND_DSN
           {{- if kindIs "string" .Values.postgres.dsn }}
           value: {{ .Values.postgres.dsn }}
           {{- else }}
@@ -41,7 +41,7 @@ spec:
         command: ['sh', '-c']
         args:
           - |
-            until pg_isready -d "$GEL_SERVER_BACKEND_DSN"; do
+            until pg_isready -d "${{ .Values.envPrefix }}_SERVER_BACKEND_DSN"; do
               echo "Waiting for postgres..."
               sleep 2
             done
@@ -70,7 +70,7 @@ spec:
         {{- if not .Values.postgres.dsn }}
         {{- fail "You must provide a postgres dsn value if postgres is enabled" }}
         {{- end }}
-        - name: GEL_SERVER_BACKEND_DSN
+        - name: {{ .Values.envPrefix }}_SERVER_BACKEND_DSN
           {{- if kindIs "string" .Values.postgres.dsn }}
           value: {{ .Values.postgres.dsn }}
           {{- else }}
@@ -78,15 +78,15 @@ spec:
           {{- end }}
         {{- end }}
         {{- if .Values.security.tls.enabled }}
-        - name: GEL_SERVER_TLS_CERT_FILE
+        - name: {{ .Values.envPrefix }}_SERVER_TLS_CERT_FILE
           value: /etc/gel/tls/tls.crt
-        - name: GEL_SERVER_TLS_KEY_FILE
+        - name: {{ .Values.envPrefix }}_SERVER_TLS_KEY_FILE
           value: /etc/gel/tls/tls.key
         {{- else }}
-        - name: GEL_SERVER_TLS_CERT_MODE
+        - name: {{ .Values.envPrefix }}_SERVER_TLS_CERT_MODE
           value: generate_self_signed
         {{- end }}
-        - name: GEL_SERVER_PASSWORD
+        - name: {{ .Values.envPrefix }}_SERVER_PASSWORD
           valueFrom:
             secretKeyRef:
               {{- if .Values.security.password }}
@@ -99,7 +99,7 @@ spec:
         {{- with .Values.env }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        - name: GEL_PORT
+        - name: {{ .Values.envPrefix }}_PORT
           value: "5656"
         volumeMounts:
           {{- if .Values.storage.enabled }}

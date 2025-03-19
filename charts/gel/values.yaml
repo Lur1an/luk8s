@@ -39,6 +39,8 @@ env: []
 volumes: []
 volumeMounts: []
 
+envPrefix: "GEL"
+
 service:
   type: ClusterIP
   port: 5656

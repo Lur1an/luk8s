@@ -101,4 +101,15 @@ entries:
     urls:
     - https://github.com/Lur1an/luk8s/releases/download/edgedb-0.1.0/edgedb-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-13T21:26:01.709612377Z"
+  gel:
+  - apiVersion: v2
+    appVersion: "6.2"
+    created: "2025-03-19T10:11:44.781814897Z"
+    description: A Helm chart for self hosting Gel
+    digest: 3257ac8dfe6c3a55abc53368ac180a62727e3daf16613af0e1bfcfaae72eae3a
+    name: gel
+    type: application
+    urls:
+    - https://github.com/Lur1an/luk8s/releases/download/gel-0.1.0/gel-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-03-19T10:11:44.781909624Z"

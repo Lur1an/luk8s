@@ -7,14 +7,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "edgedb.fullname" . }}-cert
+  name: {{ include "gel.fullname" . }}-cert
   labels:
-    {{- include "edgedb.labels" . | nindent 4 }}
+    {{- include "gel.labels" . | nindent 4 }}
 spec:
-  secretName: {{ include "edgedb.tlsSecretName" . }}
+  secretName: {{ include "gel.tlsSecretName" . }}
   secretTemplate:
     labels:
-      {{- include "edgedb.labels" . | nindent 6 }}
+      {{- include "gel.labels" . | nindent 6 }}
   {{ toYaml .Values.security.tls.cert | nindent 2 }}
 {{- end }}
 

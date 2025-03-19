@@ -1,5 +1,5 @@
 image:
-  repository: edgedb/edgedb
+  repository: gel/gel
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -11,7 +11,7 @@ affinity: {}
 replicas: 1
 
 env:
-- name: EDGEDB_SERVER_ADMIN_UI
+- name: GEL_SERVER_ADMIN_UI
   value: enabled
 storage:
   enabled: true

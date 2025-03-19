@@ -1,5 +1,5 @@
 image:
-  repository: edgedb/edgedb
+  repository: gel/gel
   pullPolicy: IfNotPresent
   tag:
 
@@ -50,9 +50,9 @@ storage:
 
 postgres:
   enabled: false
-  # Can also just be a string postgres://mypostgres:5432/edgedb
+  # Can also just be a string postgres://mypostgres:5432/gel
   # dsn:
   #   valueFrom:
   #     secretKeyRef:
-  #       name: edgedb-postgres-app
+  #       name: gel-postgres-app
   #       key: uri

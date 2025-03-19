@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "edgedb.name" -}}
+{{- define "gel.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "edgedb.fullname" -}}
+{{- define "gel.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "edgedb.chart" -}}
+{{- define "gel.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "edgedb.labels" -}}
-helm.sh/chart: {{ include "edgedb.chart" . }}
-{{ include "edgedb.selectorLabels" . }}
+{{- define "gel.labels" -}}
+helm.sh/chart: {{ include "gel.chart" . }}
+{{ include "gel.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,8 +45,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "edgedb.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "edgedb.name" . }}
+{{- define "gel.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "gel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
@@ -54,8 +54,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Generate or lookup password
 */}}
-{{- define "edgedb.password" -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-server-password" (include "edgedb.fullname" .)) }}
+{{- define "gel.password" -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-server-password" (include "gel.fullname" .)) }}
 {{- if $secret }}
 {{- $secret.data.password | b64dec }}
 {{- else }}
@@ -63,12 +63,12 @@ Generate or lookup password
 {{- end }}
 {{- end }}
 
-{{- define "edgedb.tlsSecretName"}}
+{{- define "gel.tlsSecretName"}}
 {{- if .Values.security.tls.enabled }}
   {{- if .Values.security.tls.secret }}
   {{- .Values.security.tls.secret }}
   {{- else if .Values.security.tls.cert }}
-  {{- include "edgedb.fullname" . }}-tls
+  {{- include "gel.fullname" . }}-tls
   {{- else }}
   {{- fail "You must provide either a secret or cert for TLS configuration" }}
   {{- end }}

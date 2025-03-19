@@ -5,9 +5,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "edgedb.fullname" . }}-data
+  name: {{ include "gel.fullname" . }}-data
   labels:
-    {{- include "edgedb.labels" . | nindent 4 }}
+    {{- include "gel.labels" . | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce

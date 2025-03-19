@@ -1,12 +1,12 @@
-# EdgeDB Helm Chart
+# Gel Helm Chart
 
-This Helm chart deploys EdgeDB on Kubernetes with support for both local storage and PostgreSQL backends.
+This Helm chart deploys [Gel](https://www.geldata.com/) on Kubernetes with support for both local storage and PostgreSQL backends.
 
 ## Installation
 
 ```bash
 helm repo add luk8s https://lur1an.github.io/luk8s
-helm install edgedb luk8s/edgedb
+helm install gel luk8s/gel
 ```
 
 ## Configuration
@@ -74,17 +74,17 @@ security:
 ```
 The schema for the `cert` field is the same as the [cert-manager Certificate](https://cert-manager.io/docs/usage/certificate/) with the omission of `secretName` and `secretTemplate` which are then filled in by the chart.
 ### Additional configuration
-You can provide additional [environment variables](https://docs.edgedb.com/database/reference/environment) to the EdgeDB container to modify your deployment:
+You can provide additional [environment variables](https://docs.geldata.com/database/reference/environment) to the Gel container to modify your deployment:
 ```yaml
 env:
 # enables the admin UI
-- name: EDGEDB_SERVER_ADMIN_UI
+- name: GEL_SERVER_ADMIN_UI
   value: enabled
 # allow non TLS connections for HTTP clients, useful if all your TLS is over your reverse proxy or cloud LB
-- name: EDGEDB_SERVER_ALLOW_INSECURE_HTTP_CLIENTS
+- name: GEL_SERVER_ALLOW_INSECURE_HTTP_CLIENTS
   value: "1"
 ```
-> **_Note_**: Some environment variables are set automatically by the chart, such as `EDGEDB_SERVER_TLS_*`, `EDGEDB_SERVER_PASSWORD` and `EDGEDB_PORT`.
+> **_Note_**: Some environment variables are set automatically by the chart, such as `GEL_SERVER_TLS_*`, `GEL_SERVER_PASSWORD` and `GEL_PORT`.
 
 ## Examples
 ### High-availability setup with [CloudnativePG](https://cloudnative-pg.io/):
@@ -93,7 +93,7 @@ Set up a Postgres cluster with CloudnativePG:
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: edgedb-postgres
+  name: gel-postgres
 spec:
   instances: 2
   storage:
@@ -101,7 +101,7 @@ spec:
     storageClass: local-path
   managed:
     roles:
-    - name: edgedb
+    - name: gel
       superuser: true
       createdb: true
       createrole: true
@@ -110,12 +110,12 @@ spec:
       - postgres
   bootstrap:
     initdb:
-      owner: edgedb
-      database: edgedb
+      owner: gel
+      database: gel
 ```
-It seems EdgeDB needs to run on a user that has all privileges, that's why we give it the postgres role.
+It seems Gel needs to run on a user that has all privileges, that's why we give it the postgres role.
 ```yaml
-replicas: 2 # Multiple instances of EdgeDB seem to be working fine
+replicas: 2 # Multiple instances of Gel seem to be working fine
 storage:
   enabled: false
 postgres:
@@ -123,22 +123,22 @@ postgres:
   dsn:
     valueFrom:
       secretKeyRef:
-        name: edgedb-postgres-app
+        name: gel-postgres-app
         key: uri
 ```
 To connect to the database from your application set up your environment variables:
 ```yaml
 env:
-- name: EDGEDB_PASSWORD
+- name: GEL_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: edgedb-server-password
+      name: gel-server-password
       key: password
-- name: EDGEDB_DSN
-  value: edgedb://edgedb:${EDGEDB_PASSWORD}@edgedb:5656/main
-- name: EDGEDB_CLIENT_TLS_SECURITY
+- name: GEL_DSN
+  value: gel://gel:${GEL_PASSWORD}@gel:5656/main
+- name: GEL_CLIENT_TLS_SECURITY
   value: insecure
-- name: EDGEDB_CLIENT_SECURITY
+- name: GEL_CLIENT_SECURITY
   value: insecure_dev_mode
 ```
-> **_Note_**: The `EDGEDB_CLIENT_TLS_SECURITY` and `EDGEDB_CLIENT_SECURITY` environment variables are required to connect to the database if you don't use a trusted source for your tls certificates. EdgeDB creates and signs its own TLS certificates if none are provided.
+> **_Note_**: The `GEL_CLIENT_TLS_SECURITY` and `GEL_CLIENT_SECURITY` environment variables are required to connect to the database if you don't use a trusted source for your tls certificates. Gel creates and signs its own TLS certificates if none are provided.

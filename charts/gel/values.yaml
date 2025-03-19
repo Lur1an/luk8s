@@ -1,5 +1,5 @@
 image:
-  repository: gel/gel
+  repository: geldata/gel
   pullPolicy: IfNotPresent
   tag:
 

@@ -74,3 +74,11 @@ Generate or lookup password
   {{- end }}
 {{- end }}
 {{- end }}
+
+{{- if .Values.postgres.cnpg.enabled }}
+{{- define "cnpg.name" -}}
+{{- include "gel.fullname" . }}-pg
+{{- end }}
+
+{{- end }}
+

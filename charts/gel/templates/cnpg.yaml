@@ -1,0 +1,48 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "gel.fullname" . }}-pg
+spec:
+  monitoring:
+    enablePodMonitor: true
+  instances: 2
+  storage:
+    size: 20Gi
+    storageClass: local-path
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: node-role.kubernetes.io/database
+            operator: In
+            values:
+            - "true"
+  backup:
+    retentionPolicy: 2d
+    barmanObjectStore:
+      destinationPath: s3://metropolis
+      endpointURL: https://nbg1.your-objectstorage.com # for non-AWS S3-compatible storage
+      # Prepare this secret with: k secrets:create cloudnativepg-s3-credentials
+      s3Credentials:
+        accessKeyId:
+          name: metropolis-s3-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: metropolis-s3-credentials
+          key: SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+        maxParallel: 4
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: rupricer-pg-cluster-backup
+spec:
+  schedule: "0 0 5 * * *" # At 5:00 every day
+  backupOwnerReference: self
+  cluster:
+    name: rupricer-pg-cluster
+{{- end }}

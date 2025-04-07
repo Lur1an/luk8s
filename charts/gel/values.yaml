@@ -52,7 +52,12 @@ storage:
 
 postgres:
   enabled: false
-  # Can also just be a string postgres://mypostgres:5432/gel
+  # can be a string
+  # dsn: postgres://mypostgres:5432/gel
+  # or the chart can create a cnpg cluster
+  # cnpg:
+  #   .. TODO: define
+  # can also be a yaml object for lookup
   # dsn:
   #   valueFrom:
   #     secretKeyRef:

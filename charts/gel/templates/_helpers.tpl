@@ -51,18 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
-{{/*
-Generate or lookup password
-*/}}
-{{- define "gel.password" -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-server-password" (include "gel.fullname" .)) }}
-{{- if $secret }}
-{{- $secret.data.password | b64dec }}
-{{- else }}
-{{- randAlphaNum 32 }}
-{{- end }}
-{{- end }}
-
 {{- define "gel.tlsSecretName"}}
 {{- if .Values.security.tls.enabled }}
   {{- if .Values.security.tls.secret }}

@@ -87,15 +87,14 @@ spec:
           value: generate_self_signed
         {{- end }}
         - name: {{ .Values.envPrefix }}_SERVER_PASSWORD
+          {{- if .Values.security.password }}
           valueFrom:
             secretKeyRef:
-              {{- if .Values.security.password }}
               name: {{ .Values.security.password.secret }}
               key: {{ .Values.security.password.key }}
-              {{- else }}
-              name: {{ include "gel.fullname" . }}-server-password
-              key: password
-              {{- end }}
+          {{- else }}
+          value: admin
+          {{- end }}
         {{- with .Values.env }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

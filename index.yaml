@@ -104,6 +104,16 @@ entries:
   gel:
   - apiVersion: v2
     appVersion: "6.2"
+    created: "2025-07-12T17:53:26.761309887Z"
+    description: A Helm chart for self hosting Gel
+    digest: 73f707c97622a57bb9cb4184ba8dff01adb4ef6789a89793c26cc480ab607269
+    name: gel
+    type: application
+    urls:
+    - https://github.com/Lur1an/luk8s/releases/download/gel-0.1.12/gel-0.1.12.tgz
+    version: 0.1.12
+  - apiVersion: v2
+    appVersion: "6.2"
     created: "2025-03-19T14:04:53.695864573Z"
     description: A Helm chart for self hosting Gel
     digest: 62a754427d06ce6fd9406a6a8193dec5509a673f81aed5676817b9683e717cee
@@ -132,4 +142,4 @@ entries:
     urls:
     - https://github.com/Lur1an/luk8s/releases/download/gel-0.1.0/gel-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-19T14:04:53.695896042Z"
+generated: "2025-07-12T17:53:26.761342858Z"
